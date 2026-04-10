@@ -1,6 +1,6 @@
--- STANDALONE AUTO-PRESSER (Space + 2 key - CONTINUOUS WITH CYCLES)
+-- STANDALONE AUTO-PRESSER (Space key only - CONTINUOUS WITH CYCLES)
 -- 20 second delay before first execution
--- Presses Space + 2 continuously for 5 seconds, then waits 3 seconds, then repeats
+-- Presses Space continuously for 5 seconds, then waits 3 seconds, then repeats
 -- 20ms delay between each press cycle
 -- Press P to manually stop/start anytime
 
@@ -41,7 +41,7 @@ local function startAutoPresser()
         title.Size = UDim2.new(1, 0, 0, 25)
         title.Position = UDim2.new(0, 0, 0, 0)
         title.BackgroundTransparency = 1
-        title.Text = "🤖 Auto Presser (Space + 2 - Cyclic)"
+        title.Text = "🤖 Auto Presser (Space key - Cyclic)"
         title.TextColor3 = Color3.fromRGB(255, 255, 255)
         title.TextSize = 16
         title.Font = Enum.Font.GothamBold
@@ -113,7 +113,7 @@ local function startAutoPresser()
         keyDisplay.Size = UDim2.new(1, 0, 0, 30)
         keyDisplay.Position = UDim2.new(0, 0, 0, 115)
         keyDisplay.BackgroundTransparency = 1
-        keyDisplay.Text = "⚡ PRESSING SPACE + 2..."
+        keyDisplay.Text = "⚡ PRESSING SPACE..."
         keyDisplay.TextColor3 = Color3.fromRGB(0, 255, 0)
         keyDisplay.TextSize = 12
         keyDisplay.Font = Enum.Font.GothamBold
@@ -126,7 +126,7 @@ local function startAutoPresser()
     -- Update key display
     local function updateKeyDisplay(keyDisplay)
         if keyDisplay then
-            keyDisplay.Text = "🔘 PRESSING: SPACE + 2"
+            keyDisplay.Text = "🔘 PRESSING: SPACE"
             keyDisplay.TextColor3 = Color3.fromRGB(0, 255, 0)
         end
     end
@@ -134,24 +134,20 @@ local function startAutoPresser()
     -- Reset key display
     local function resetKeyDisplay(keyDisplay)
         if keyDisplay then
-            keyDisplay.Text = "⚡ PRESSING SPACE + 2..."
+            keyDisplay.Text = "⚡ PRESSING SPACE..."
             keyDisplay.TextColor3 = Color3.fromRGB(0, 255, 0)
         end
     end
 
-    -- Function to press both Space and 2 keys
-    local function pressBothKeys()
+    -- Function to press Space key only
+    local function pressSpaceKey()
         -- Press Space
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "Space", false, game)
-        -- Press 2 key
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, "Two", false, game)
         
         wait(0.02) -- 20ms hold time
         
         -- Release Space
         game:GetService("VirtualInputManager"):SendKeyEvent(false, "Space", false, game)
-        -- Release 2 key
-        game:GetService("VirtualInputManager"):SendKeyEvent(false, "Two", false, game)
     end
 
     -- Main continuous press function (runs for 5 seconds)
@@ -160,7 +156,7 @@ local function startAutoPresser()
         local startTime = tick()
         local endTime = startTime + 5 -- 5 seconds of pressing
         
-        print("🔴 Cycle " .. (cycleCount + 1) .. " - Pressing Space + 2 for 5 seconds (20ms delay)")
+        print("🔴 Cycle " .. (cycleCount + 1) .. " - Pressing Space for 5 seconds (20ms delay)")
         
         while pressing and tick() < endTime do
             -- Calculate remaining time
@@ -169,9 +165,9 @@ local function startAutoPresser()
                 timerText.Text = "⏱️ Pressing: " .. remaining .. "s left"
             end
             
-            -- Press both keys
+            -- Press Space key
             updateKeyDisplay(keyDisplay)
-            pressBothKeys()
+            pressSpaceKey()
             
             pressCount = pressCount + 1
             if counterText then
@@ -203,7 +199,7 @@ local function startAutoPresser()
                 dot.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
             end
             if keyDisplay then
-                keyDisplay.Text = "⚡ PRESSING SPACE + 2..."
+                keyDisplay.Text = "⚡ PRESSING SPACE..."
                 keyDisplay.TextColor3 = Color3.fromRGB(0, 255, 0)
             end
             
@@ -266,15 +262,15 @@ local function startAutoPresser()
             timerText.TextColor3 = Color3.fromRGB(255, 100, 100)
         end
         if keyDisplay then
-            keyDisplay.Text = "⏸ Stopped - " .. pressCount .. " Space+2 presses"
+            keyDisplay.Text = "⏸ Stopped - " .. pressCount .. " Space presses"
             keyDisplay.TextColor3 = Color3.fromRGB(150, 150, 150)
         end
         
-        print("🟢 Auto-press STOPPED after " .. pressCount .. " Space+2 presses in " .. cycleCount .. " cycles")
+        print("🟢 Auto-press STOPPED after " .. pressCount .. " Space presses in " .. cycleCount .. " cycles")
         
         game:GetService("StarterGui"):SetCore("SendNotification", {
             Title = "Auto-Presser",
-            Text = "STOPPED! " .. pressCount .. " Space+2 presses in " .. cycleCount .. " cycles",
+            Text = "STOPPED! " .. pressCount .. " Space presses in " .. cycleCount .. " cycles",
             Duration = 3
         })
     end
@@ -301,7 +297,7 @@ local function startAutoPresser()
         timerText.TextColor3 = Color3.fromRGB(255, 255, 100)
         counterText.Text = "📊 Total Presses: 0"
         cycleText.Text = "🔄 Cycle: 0"
-        keyDisplay.Text = "⚡ PRESSING SPACE + 2..."
+        keyDisplay.Text = "⚡ PRESSING SPACE..."
         keyDisplay.TextColor3 = Color3.fromRGB(0, 255, 0)
         
         -- Start cycling in a separate thread
@@ -309,11 +305,11 @@ local function startAutoPresser()
             startCycling(statusText, dot, keyDisplay, timerText, counterText, cycleText)
         end)
         
-        print("🔴 Auto-press STARTED - Cycling: 5 seconds press (Space+2), 3 seconds wait, repeat")
+        print("🔴 Auto-press STARTED - Cycling: 5 seconds press (Space), 3 seconds wait, repeat")
         
         game:GetService("StarterGui"):SetCore("SendNotification", {
             Title = "Auto-Presser",
-            Text = "STARTED! Space+2: 5s press → 3s wait → repeat | Press P to stop",
+            Text = "STARTED! Space: 5s press → 3s wait → repeat | Press P to stop",
             Duration = 3
         })
     end
@@ -342,7 +338,7 @@ local function startAutoPresser()
         
         print("====================================")
         print("🤖 Auto-Presser Loaded!")
-        print("📌 Pressing: SPACE + 2 keys simultaneously")
+        print("📌 Pressing: SPACE key only")
         print("⚡ Delay: 20ms between each press cycle")
         print("⏱️ Cycle: 5 seconds press → 3 seconds wait → repeat")
         print("🎮 Press 'P' to manually stop/start")
